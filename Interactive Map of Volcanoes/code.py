@@ -12,18 +12,23 @@ def elevation_color(elevation):
         return 'red'
 
 
+# function to convert meters to feet
+def meter_feet(hight):
+    return round(hight / 3.28084)
+
+
 # html link to seach for volcano on google
 html = """
 Volcano Name:
 <a href="https://www.google.com/search?q=%%22%s%%22" target="_blank">%s</a><br>
-Height: %s m <br>
+Height: %s ft <br>
 Status: %s <br>
 Type: %s
 """
 
 
 # Read the volcations.txt data and store them in lists
-volcanoes = pd.read_csv("volcanoes.txt")
+volcanoes = pd.read_csv("Interactive Map of Volcanoes/Volcanoes.txt")
 lat = list(volcanoes["LAT"])
 lon = list(volcanoes["LON"])
 elev = list(volcanoes["ELEV"])
@@ -42,7 +47,7 @@ for lt, ln, el, name, status, types in zip(lat, lon, elev, name, status, types):
 
     # popup window with info about a the volcano
     iframe = folium.IFrame(html=html % (
-        name, name, el, status, types), width=200, height=125)
+        name, name, meter_feet(el), status, types), width=200, height=125)
     # set the marker and call the color function
     fg.add_child(folium.Marker(location=[lt, ln], popup=folium.Popup(
         iframe), icon=folium.Icon(color=elevation_color(el))))
